@@ -1,4 +1,4 @@
-import * as sb from '../dist/index';
+import sb from '../dist/index';
 
 describe('store-buddy Persistent class', () => {
   beforeEach(() => localStorage.clear());
@@ -33,6 +33,10 @@ describe('store-buddy Persistent class', () => {
 
       const obj = { foo: true, bar: 'baz' };
       expect(new sb.Persistent('test', obj).get()).toEqual(obj);
+
+      const a = new sb.Persistent('test', 'hello');
+      localStorage.removeItem('test');
+      expect(a.get()).toBeNull();
     });
 
     test('set', () => {
@@ -102,6 +106,10 @@ describe('store-buddy Session class', () => {
 
       const obj = { foo: true, bar: 'baz' };
       expect(new sb.Session('test', obj).get()).toEqual(obj);
+
+      const a = new sb.Session('test', 'hello');
+      sessionStorage.removeItem('test');
+      expect(a.get()).toBeNull();
     });
 
     test('set', () => {
