@@ -1,9 +1,12 @@
 {
   "name": "store-buddy",
   "version": "1.0.0",
-  "description": "A neat utility for working with localStorage and sessionStorage.",
+  "description": "A localStorage and sessionStorage wrapper, adding type hinting and type safety.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "jest src/index.spec.ts"
   },
@@ -15,6 +18,14 @@
   ],
   "author": "George Pickering",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geopic/store-buddy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/geopic/store-buddy/issues"
+  },
+  "homepage": "https://github.com/geopic/store-buddy",
   "devDependencies": {
     "@types/jest": "^26.0.16",
     "@types/node": "^14.14.10",
