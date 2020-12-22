@@ -57,12 +57,6 @@ describe('store-buddy Persistent class', () => {
       expect(localStorage.getItem('test4')).toBe(
         JSON.stringify({ foo: 'bar' })
       );
-
-      const e = new sb.Persistent('test5', { foo: 'bar' });
-      e.set({ foo: 'bar', baz: true });
-      expect(localStorage.getItem('test5')).toBe(
-        JSON.stringify({ foo: 'bar', baz: true })
-      );
     });
 
     test('remove', () => {
@@ -129,12 +123,6 @@ describe('store-buddy Session class', () => {
       d.set({ foo: 'bar' });
       expect(sessionStorage.getItem('test4')).toBe(
         JSON.stringify({ foo: 'bar' })
-      );
-
-      const e = new sb.Session('test5', { foo: 'bar' });
-      e.set({ foo: 'bar', baz: true });
-      expect(sessionStorage.getItem('test5')).toBe(
-        JSON.stringify({ foo: 'bar', baz: true })
       );
     });
 

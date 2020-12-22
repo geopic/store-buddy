@@ -56,8 +56,7 @@ var Persistent = /** @class */ (function (_super) {
     };
     /**
      * Overwrite old data in localStorage. For TS developers, it prevents
-     * overwriting the old data with new data of a _different_ type, though objects
-     * can be extended with new properties.
+     * overwriting the old data with new data of a _different_ type.
      * @param data The data to save to localStorage.
      * @example
      *
@@ -67,9 +66,6 @@ var Persistent = /** @class */ (function (_super) {
      * const storage1 = new sb.Persistent("foo1", "bar"); // note how data type is string
      * storage1.set("baz"); // data is overwritten with another string with no issue
      * storage1.set(123); // this produces an error, since a number is not expected
-     *
-     * const storage2 = new sb.Persistent("foo2", { prop1: true }); // note how data type is object
-     * storage2.set({ prop1: true, prop2: null }); // prop is added to object with no issue
      * ```
      */
     Persistent.prototype.set = function (data) {
@@ -134,8 +130,7 @@ var Session = /** @class */ (function (_super) {
     };
     /**
      * Overwrite old data in sessionStorage. For TS developers, it prevents
-     * overwriting the old data with new data of a _different_ type, though objects
-     * can be extended with new properties.
+     * overwriting the old data with new data of a _different_ type.
      * @param data The data to save to sessionStorage.
      * @example
      *
@@ -145,9 +140,6 @@ var Session = /** @class */ (function (_super) {
      * const storage1 = new sb.Session("foo1", "bar"); // note how data type is string
      * storage1.set("baz"); // data is overwritten with another string with no issue
      * storage1.set(123); // this produces an error, since a number is not expected
-     *
-     * const storage2 = new sb.Session("foo2", { prop1: true }); // note how data type is object
-     * storage2.set({ prop1: true, prop2: null }); // prop is added to object with no issue
      * ```
      */
     Session.prototype.set = function (data) {

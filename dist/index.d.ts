@@ -1,9 +1,12 @@
+declare type IsEmptyObject<O> = O extends {
+    [key: string]: never;
+} ? object : O;
 declare abstract class StoreBuddy<T> {
     protected key: string;
-    protected value: T;
-    constructor(key: string, value: T);
-    get(): T | null;
-    set<U extends T>(data: T | U): void;
+    protected value: IsEmptyObject<T>;
+    constructor(key: string, value: IsEmptyObject<T>);
+    get(): IsEmptyObject<T>;
+    set(data: IsEmptyObject<T>): void;
     remove(): void;
 }
 export declare class Persistent<T> extends StoreBuddy<T> {
@@ -20,7 +23,7 @@ export declare class Persistent<T> extends StoreBuddy<T> {
      * const storage = new sb.Persistent("foo", "bar");
      * ```
      */
-    constructor(key: string, value: T);
+    constructor(key: string, value: IsEmptyObject<T>);
     /**
      * Retrieve data set using this instance.
      * @returns The data from localStorage. If no data exists, returns `null`.
@@ -36,11 +39,10 @@ export declare class Persistent<T> extends StoreBuddy<T> {
      * storage2.get(); // returns 123, return type is number
      * ```
      */
-    get(): T | null;
+    get(): IsEmptyObject<T>;
     /**
      * Overwrite old data in localStorage. For TS developers, it prevents
-     * overwriting the old data with new data of a _different_ type, though objects
-     * can be extended with new properties.
+     * overwriting the old data with new data of a _different_ type.
      * @param data The data to save to localStorage.
      * @example
      *
@@ -50,12 +52,9 @@ export declare class Persistent<T> extends StoreBuddy<T> {
      * const storage1 = new sb.Persistent("foo1", "bar"); // note how data type is string
      * storage1.set("baz"); // data is overwritten with another string with no issue
      * storage1.set(123); // this produces an error, since a number is not expected
-     *
-     * const storage2 = new sb.Persistent("foo2", { prop1: true }); // note how data type is object
-     * storage2.set({ prop1: true, prop2: null }); // prop is added to object with no issue
      * ```
      */
-    set<U extends T>(data: T | U): void;
+    set(data: IsEmptyObject<T>): void;
     /**
      * Remove all data set using this instance.
      * @example
@@ -85,7 +84,7 @@ export declare class Session<T> extends StoreBuddy<T> {
      * const storage = new sb.Session("foo", "bar");
      * ```
      */
-    constructor(key: string, value: T);
+    constructor(key: string, value: IsEmptyObject<T>);
     /**
      * Retrieve data set using this instance.
      * @returns The data from sessionStorage. If no data exists, returns `null`.
@@ -101,11 +100,10 @@ export declare class Session<T> extends StoreBuddy<T> {
      * storage2.get(); // returns 123, return type is number
      * ```
      */
-    get(): T | null;
+    get(): IsEmptyObject<T>;
     /**
      * Overwrite old data in sessionStorage. For TS developers, it prevents
-     * overwriting the old data with new data of a _different_ type, though objects
-     * can be extended with new properties.
+     * overwriting the old data with new data of a _different_ type.
      * @param data The data to save to sessionStorage.
      * @example
      *
@@ -115,12 +113,9 @@ export declare class Session<T> extends StoreBuddy<T> {
      * const storage1 = new sb.Session("foo1", "bar"); // note how data type is string
      * storage1.set("baz"); // data is overwritten with another string with no issue
      * storage1.set(123); // this produces an error, since a number is not expected
-     *
-     * const storage2 = new sb.Session("foo2", { prop1: true }); // note how data type is object
-     * storage2.set({ prop1: true, prop2: null }); // prop is added to object with no issue
      * ```
      */
-    set<U extends T>(data: T | U): void;
+    set(data: IsEmptyObject<T>): void;
     /**
      * Remove all data set using this instance.
      * @example
