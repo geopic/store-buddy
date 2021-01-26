@@ -14,6 +14,10 @@ var StoreBuddy = /** @class */ (function () {
         data;
     };
     StoreBuddy.prototype.remove = function () { };
+    StoreBuddy.exists = function (key) {
+        key;
+        return false;
+    };
     return StoreBuddy;
 }());
 var Persistent = /** @class */ (function (_super) {
@@ -86,6 +90,23 @@ var Persistent = /** @class */ (function (_super) {
      */
     Persistent.prototype.remove = function () {
         localStorage.removeItem(this.key);
+    };
+    /**
+     * Check if data exists in localStorage with the specified key.
+     * @param key The key of the data whose existence is checked.
+     * @returns `true` if the data exists, `false` if not.
+     * @example
+     *
+     * ```
+     * import sb from "store-buddy";
+     *
+     * sb.Persistent.exists("foo"); // returns false
+     * new sb.Persistent("foo", "bar");
+     * sb.Persistent.exists("foo"); // returns true
+     * ```
+     */
+    Persistent.exists = function (key) {
+        return Boolean(localStorage.getItem(key));
     };
     return Persistent;
 }(StoreBuddy));
@@ -160,6 +181,23 @@ var Session = /** @class */ (function (_super) {
      */
     Session.prototype.remove = function () {
         sessionStorage.removeItem(this.key);
+    };
+    /**
+     * Check if data exists in sessionStorage with the specified key.
+     * @param key The key of the data whose existence is checked.
+     * @returns `true` if the data exists, `false` if not.
+     * @example
+     *
+     * ```
+     * import sb from "store-buddy";
+     *
+     * sb.Session.exists("foo"); // returns false
+     * new sb.Session("foo", "bar");
+     * sb.Session.exists("foo"); // returns true
+     * ```
+     */
+    Session.exists = function (key) {
+        return Boolean(sessionStorage.getItem(key));
     };
     return Session;
 }(StoreBuddy));

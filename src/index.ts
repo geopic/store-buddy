@@ -18,6 +18,11 @@ abstract class StoreBuddy<T> {
   }
 
   remove(): void {}
+
+  static exists(key: string): boolean {
+    key;
+    return false;
+  }
 }
 
 export class Persistent<T> extends StoreBuddy<T> {
@@ -93,6 +98,24 @@ export class Persistent<T> extends StoreBuddy<T> {
   remove(): void {
     localStorage.removeItem(this.key);
   }
+
+  /**
+   * Check if data exists in localStorage with the specified key.
+   * @param key The key of the data whose existence is checked.
+   * @returns `true` if the data exists, `false` if not.
+   * @example
+   *
+   * ```
+   * import sb from "store-buddy";
+   *
+   * sb.Persistent.exists("foo"); // returns false
+   * new sb.Persistent("foo", "bar");
+   * sb.Persistent.exists("foo"); // returns true
+   * ```
+   */
+  static exists(key: string) {
+    return Boolean(localStorage.getItem(key));
+  }
 }
 
 export class Session<T> extends StoreBuddy<T> {
@@ -167,6 +190,24 @@ export class Session<T> extends StoreBuddy<T> {
    */
   remove(): void {
     sessionStorage.removeItem(this.key);
+  }
+
+  /**
+   * Check if data exists in sessionStorage with the specified key.
+   * @param key The key of the data whose existence is checked.
+   * @returns `true` if the data exists, `false` if not.
+   * @example
+   *
+   * ```
+   * import sb from "store-buddy";
+   *
+   * sb.Session.exists("foo"); // returns false
+   * new sb.Session("foo", "bar");
+   * sb.Session.exists("foo"); // returns true
+   * ```
+   */
+  static exists(key: string) {
+    return Boolean(sessionStorage.getItem(key));
   }
 }
 

@@ -8,6 +8,7 @@ declare abstract class StoreBuddy<T> {
     get(): IsEmptyObject<T>;
     set(data: IsEmptyObject<T>): void;
     remove(): void;
+    static exists(key: string): boolean;
 }
 export declare class Persistent<T> extends StoreBuddy<T> {
     /**
@@ -69,6 +70,21 @@ export declare class Persistent<T> extends StoreBuddy<T> {
      * ```
      */
     remove(): void;
+    /**
+     * Check if data exists in localStorage with the specified key.
+     * @param key The key of the data whose existence is checked.
+     * @returns `true` if the data exists, `false` if not.
+     * @example
+     *
+     * ```
+     * import sb from "store-buddy";
+     *
+     * sb.Persistent.exists("foo"); // returns false
+     * new sb.Persistent("foo", "bar");
+     * sb.Persistent.exists("foo"); // returns true
+     * ```
+     */
+    static exists(key: string): boolean;
 }
 export declare class Session<T> extends StoreBuddy<T> {
     /**
@@ -130,6 +146,21 @@ export declare class Session<T> extends StoreBuddy<T> {
      * ```
      */
     remove(): void;
+    /**
+     * Check if data exists in sessionStorage with the specified key.
+     * @param key The key of the data whose existence is checked.
+     * @returns `true` if the data exists, `false` if not.
+     * @example
+     *
+     * ```
+     * import sb from "store-buddy";
+     *
+     * sb.Session.exists("foo"); // returns false
+     * new sb.Session("foo", "bar");
+     * sb.Session.exists("foo"); // returns true
+     * ```
+     */
+    static exists(key: string): boolean;
 }
 declare const _default: {
     Persistent: typeof Persistent;

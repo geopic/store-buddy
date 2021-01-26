@@ -64,6 +64,18 @@ describe('store-buddy Persistent class', () => {
       new sb.Persistent('test', 'hello').remove();
       expect(localStorage.getItem('test')).toBeNull();
     });
+
+    test('(static) exists', () => {
+      expect(sb.Persistent.exists('test')).toBe(false);
+      localStorage.setItem('test', 'hello');
+      expect(sb.Persistent.exists('test')).toBe(true);
+
+      localStorage.removeItem('test');
+      expect(sb.Persistent.exists('test')).toBe(false);
+
+      new sb.Persistent('test', 'hello');
+      expect(sb.Persistent.exists('test')).toBe(true);
+    });
   });
 });
 
@@ -130,6 +142,18 @@ describe('store-buddy Session class', () => {
       expect(sessionStorage.getItem('test')).toBeNull();
       new sb.Session('test', 'hello').remove();
       expect(sessionStorage.getItem('test')).toBeNull();
+    });
+
+    test('(static) exists', () => {
+      expect(sb.Session.exists('test')).toBe(false);
+      sessionStorage.setItem('test', 'hello');
+      expect(sb.Session.exists('test')).toBe(true);
+
+      sessionStorage.removeItem('test');
+      expect(sb.Session.exists('test')).toBe(false);
+
+      new sb.Session('test', 'hello');
+      expect(sb.Session.exists('test')).toBe(true);
     });
   });
 });
