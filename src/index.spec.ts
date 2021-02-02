@@ -4,64 +4,44 @@ describe('store-buddy Persistent class', () => {
   beforeEach(() => localStorage.clear());
 
   test('it stores to localStorage', () => {
-    storeBuddy('foo', 'hello world');
+    storeBuddy('foo').save('hello world');
     expect(localStorage.getItem('foo')).not.toBeNull();
   });
 
   test('it can store a value of every type', () => {
     expect(() => {
-      storeBuddy('bar', 'hello');
+      storeBuddy<string>('bar').save('hello');
       localStorage.getItem('bar');
 
-      storeBuddy('bar', 123);
+      storeBuddy<number>('bar').save(123);
       localStorage.getItem('bar');
 
-      storeBuddy('bar', true);
+      storeBuddy<boolean>('bar').save(true);
       localStorage.getItem('bar');
 
-      storeBuddy('bar', {});
+      storeBuddy<object>('bar').save({});
       localStorage.getItem('bar');
     }).not.toThrow();
   });
 
-  describe('methods', () => {
+  describe('methods (excl. save)', () => {
     test('load', () => {
-      expect(storeBuddy('test', 'hello').load()).toBe('hello');
-      expect(storeBuddy('test', 123).load()).toBe(123);
-      expect(storeBuddy('test', true).load()).toBe(true);
-      expect(storeBuddy('test', {}).load()).toEqual({});
+      expect(storeBuddy('test').save('hello').load()).toBe('hello');
+      expect(storeBuddy('test').save(123).load()).toBe(123);
+      expect(storeBuddy('test').save(true).load()).toBe(true);
+      expect(storeBuddy('test').save({}).load()).toEqual({});
 
       const obj = { foo: true, bar: 'baz' };
-      expect(storeBuddy('test', obj).load()).toEqual(obj);
+      expect(storeBuddy('test').save(obj).load()).toEqual(obj);
 
-      const a = storeBuddy('test', 'hello');
+      const a = storeBuddy('test').save('hello');
       localStorage.removeItem('test');
       expect(a.load()).toBeNull();
     });
 
-    test('save', () => {
-      const a = storeBuddy('test1', '');
-      a.save('hello');
-      expect(localStorage.getItem('test1')).toBe(JSON.stringify('hello'));
-
-      const b = storeBuddy('test2', 123);
-      b.save(456);
-      expect(localStorage.getItem('test2')).toBe(JSON.stringify(456));
-
-      const c = storeBuddy('test3', true);
-      c.save(false);
-      expect(localStorage.getItem('test3')).toBe(JSON.stringify(false));
-
-      const d = storeBuddy('test4', {});
-      d.save({ foo: 'bar' });
-      expect(localStorage.getItem('test4')).toBe(
-        JSON.stringify({ foo: 'bar' })
-      );
-    });
-
     test('clear', () => {
       expect(localStorage.getItem('test')).toBeNull();
-      storeBuddy('test', 'hello').clear();
+      storeBuddy('test').save('hello').clear();
       expect(localStorage.getItem('test')).toBeNull();
     });
   });
@@ -71,64 +51,44 @@ describe('store-buddy Session class', () => {
   beforeEach(() => sessionStorage.clear());
 
   test('it stores to sessionStorage', () => {
-    storeBuddy('foo', 'hello world', true);
+    storeBuddy('foo', true).save('hello world');
     expect(sessionStorage.getItem('foo')).not.toBeNull();
   });
 
   test('it can store a value of every type', () => {
     expect(() => {
-      storeBuddy('bar', 'hello', true);
+      storeBuddy<string>('bar', true).save('hello');
       sessionStorage.getItem('bar');
 
-      storeBuddy('bar', 123, true);
+      storeBuddy<number>('bar', true).save(123);
       sessionStorage.getItem('bar');
 
-      storeBuddy('bar', true, true);
+      storeBuddy<boolean>('bar', true).save(true);
       sessionStorage.getItem('bar');
 
-      storeBuddy('bar', {}, true);
+      storeBuddy<object>('bar', true).save({});
       sessionStorage.getItem('bar');
     }).not.toThrow();
   });
 
-  describe('methods', () => {
+  describe('methods (excl. save)', () => {
     test('load', () => {
-      expect(storeBuddy('test', 'hello', true).load()).toBe('hello');
-      expect(storeBuddy('test', 123, true).load()).toBe(123);
-      expect(storeBuddy('test', true, true).load()).toBe(true);
-      expect(storeBuddy('test', {}, true).load()).toEqual({});
+      expect(storeBuddy('test', true).save('hello').load()).toBe('hello');
+      expect(storeBuddy('test', true).save(123).load()).toBe(123);
+      expect(storeBuddy('test', true).save(true).load()).toBe(true);
+      expect(storeBuddy('test', true).save({}).load()).toEqual({});
 
       const obj = { foo: true, bar: 'baz' };
-      expect(storeBuddy('test', obj, true).load()).toEqual(obj);
+      expect(storeBuddy('test', true).save(obj).load()).toEqual(obj);
 
-      const a = storeBuddy('test', 'hello', true);
+      const a = storeBuddy('test', true).save('hello');
       sessionStorage.removeItem('test');
       expect(a.load()).toBeNull();
     });
 
-    test('save', () => {
-      const a = storeBuddy('test1', '', true);
-      a.save('hello');
-      expect(sessionStorage.getItem('test1')).toBe(JSON.stringify('hello'));
-
-      const b = storeBuddy('test2', 123, true);
-      b.save(456);
-      expect(sessionStorage.getItem('test2')).toBe(JSON.stringify(456));
-
-      const c = storeBuddy('test3', true, true);
-      c.save(false);
-      expect(sessionStorage.getItem('test3')).toBe(JSON.stringify(false));
-
-      const d = storeBuddy('test4', {}, true);
-      d.save({ foo: 'bar' });
-      expect(sessionStorage.getItem('test4')).toBe(
-        JSON.stringify({ foo: 'bar' })
-      );
-    });
-
     test('clear', () => {
       expect(sessionStorage.getItem('test')).toBeNull();
-      storeBuddy('test', 'hello', true).clear();
+      storeBuddy('test', true).save('hello').clear();
       expect(sessionStorage.getItem('test')).toBeNull();
     });
   });

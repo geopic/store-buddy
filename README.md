@@ -17,16 +17,24 @@ npm install store-buddy
 ```ts
 import storeBuddy from 'store-buddy';
 
-const data = storeBuddy('site-data', { foo: true });
-data.load(); // returns object of type { foo: boolean; }
+// Initialise an entry in localStorage with the key 'site-data' and save an
+// object to that entry as its value
+const data1 = storeBuddy('site-data').save({ foo: true });
+data1.load(); // returns the object saved at the 'site-data' key: { foo: true }
 
-data.save({ foo: false }); // valid (argument type is same object)
-data.save(123); // invalid (argument type is number)
+// The same as above, except with the addition of type safety :D
+const data2 = storeBuddy<string>('site-data-2').save('hello world');
+data2.save('hello ye olde worlde'); // overwrite old value with new value of the same type
+data2.save(123); // invalid (type of new value is not string)
 
-data.clear(); // clear all data attributed to the key "site-data"
+data1.clear(); // clear all data attributed to the key "site-data"
+data2.clear(); // clear all data attributed to the key "site-data-2"
 
-// Data lasts only as long as a single session, specified as so in the boolean third argument
-const sessionData = storeBuddy('site-data-session', { foo: true }, true);
+// The option of using sessionStorage instead of localStorage is also available
+// with a second boolean argument in the main function
+const data3 = storeBuddy('site-data', true).save(
+  'I only last as long as a single user session'
+);
 ```
 
 ## Contributions & bug reports
