@@ -1,23 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Session = exports.Persistent = void 0;
 var tslib_1 = require("tslib");
 var StoreBuddy = /** @class */ (function () {
     function StoreBuddy(key, value) {
         this.key = key;
         this.value = value;
     }
-    StoreBuddy.prototype.get = function () {
+    StoreBuddy.prototype.load = function () {
         return this.value;
     };
-    StoreBuddy.prototype.set = function (data) {
+    StoreBuddy.prototype.save = function (data) {
         data;
     };
-    StoreBuddy.prototype.remove = function () { };
-    StoreBuddy.exists = function (key) {
-        key;
-        return false;
-    };
+    StoreBuddy.prototype.clear = function () { };
     return StoreBuddy;
 }());
 var Persistent = /** @class */ (function (_super) {
@@ -27,13 +22,6 @@ var Persistent = /** @class */ (function (_super) {
      * [localStorage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
      * @param key The key used to access the stored value.
      * @param value The value being stored.
-     * @example
-     *
-     * ```
-     * import sb from "store-buddy";
-     *
-     * const storage = new sb.Persistent("foo", "bar");
-     * ```
      */
     function Persistent(key, value) {
         var _this = _super.call(this, key, value) || this;
@@ -46,16 +34,16 @@ var Persistent = /** @class */ (function (_super) {
      * @example
      *
      * ```
-     * import sb from "store-buddy";
+     * import storeBuddy from "store-buddy";
      *
-     * const storage1 = new sb.Persistent("foo1", "bar");
-     * storage1.get(); // returns "bar", return type is string
+     * const storage1 = storeBuddy("foo1", "bar");
+     * storage1.load(); // returns "bar", return type is string
      *
-     * const storage2 = new sb.Persistent("foo2", 123);
-     * storage2.get(); // returns 123, return type is number
+     * const storage2 = storeBuddy("foo2", 123);
+     * storage2.load(); // returns 123, return type is number
      * ```
      */
-    Persistent.prototype.get = function () {
+    Persistent.prototype.load = function () {
         return JSON.parse(localStorage.getItem(this.key));
     };
     /**
@@ -65,14 +53,14 @@ var Persistent = /** @class */ (function (_super) {
      * @example
      *
      * ```
-     * import sb from "store-buddy";
+     * import storeBuddy from "store-buddy";
      *
-     * const storage1 = new sb.Persistent("foo1", "bar"); // note how data type is string
-     * storage1.set("baz"); // data is overwritten with another string with no issue
-     * storage1.set(123); // this produces an error, since a number is not expected
+     * const storage1 = storeBuddy("foo1", "bar"); // note how data type is string
+     * storage1.save("baz"); // data is overwritten with another string with no issue
+     * storage1.save(123); // this produces an error, since a number is not expected
      * ```
      */
-    Persistent.prototype.set = function (data) {
+    Persistent.prototype.save = function (data) {
         localStorage.setItem(this.key, JSON.stringify(data));
     };
     /**
@@ -80,37 +68,19 @@ var Persistent = /** @class */ (function (_super) {
      * @example
      *
      * ```
-     * import sb from "store-buddy";
+     * import storeBuddy from "store-buddy";
      *
-     * const storage = new sb.Persistent("foo", "bar");
-     * storage.get(); // returns "bar"
-     * storage.remove();
-     * storage.get(); // returns null
+     * const storage = storeBuddy("foo", "bar");
+     * storage.load(); // returns "bar"
+     * storage.clear();
+     * storage.load(); // returns null
      * ```
      */
-    Persistent.prototype.remove = function () {
+    Persistent.prototype.clear = function () {
         localStorage.removeItem(this.key);
-    };
-    /**
-     * Check if data exists in localStorage with the specified key.
-     * @param key The key of the data whose existence is checked.
-     * @returns `true` if the data exists, `false` if not.
-     * @example
-     *
-     * ```
-     * import sb from "store-buddy";
-     *
-     * sb.Persistent.exists("foo"); // returns false
-     * new sb.Persistent("foo", "bar");
-     * sb.Persistent.exists("foo"); // returns true
-     * ```
-     */
-    Persistent.exists = function (key) {
-        return Boolean(localStorage.getItem(key));
     };
     return Persistent;
 }(StoreBuddy));
-exports.Persistent = Persistent;
 var Session = /** @class */ (function (_super) {
     tslib_1.__extends(Session, _super);
     /**
@@ -118,13 +88,6 @@ var Session = /** @class */ (function (_super) {
      * a wrapper around the [sessionStorage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage).
      * @param key The key used to access the stored value.
      * @param value The value being stored.
-     * @example
-     *
-     * ```
-     * import sb from "store-buddy";
-     *
-     * const storage = new sb.Session("foo", "bar");
-     * ```
      */
     function Session(key, value) {
         var _this = _super.call(this, key, value) || this;
@@ -137,16 +100,16 @@ var Session = /** @class */ (function (_super) {
      * @example
      *
      * ```
-     * import sb from "store-buddy";
+     * import storeBuddy from "store-buddy";
      *
-     * const storage1 = new sb.Session("foo1", "bar");
-     * storage1.get(); // returns "bar", return type is string
+     * const storage1 = storeBuddy("foo1", "bar", true);
+     * storage1.load(); // returns "bar", return type is string
      *
-     * const storage2 = new sb.Session("foo2", 123);
-     * storage2.get(); // returns 123, return type is number
+     * const storage2 = storeBuddy("foo2", 123, true);
+     * storage2.load(); // returns 123, return type is number
      * ```
      */
-    Session.prototype.get = function () {
+    Session.prototype.load = function () {
         return JSON.parse(sessionStorage.getItem(this.key));
     };
     /**
@@ -156,14 +119,14 @@ var Session = /** @class */ (function (_super) {
      * @example
      *
      * ```
-     * import sb from "store-buddy";
+     * import storeBuddy from "store-buddy";
      *
-     * const storage1 = new sb.Session("foo1", "bar"); // note how data type is string
-     * storage1.set("baz"); // data is overwritten with another string with no issue
-     * storage1.set(123); // this produces an error, since a number is not expected
+     * const storage1 = storeBuddy("foo1", "bar", true); // note how data type is string
+     * storage1.save("baz"); // data is overwritten with another string with no issue
+     * storage1.save(123); // this produces an error, since a number is not expected
      * ```
      */
-    Session.prototype.set = function (data) {
+    Session.prototype.save = function (data) {
         sessionStorage.setItem(this.key, JSON.stringify(data));
     };
     /**
@@ -171,38 +134,34 @@ var Session = /** @class */ (function (_super) {
      * @example
      *
      * ```
-     * import sb from "store-buddy";
+     * import storeBuddy from "store-buddy";
      *
-     * const storage = new sb.Session("foo", "bar");
-     * storage.get(); // returns "bar"
-     * storage.remove();
-     * storage.get(); // returns null
+     * const storage = storeBuddy("foo", "bar");
+     * storage.load(); // returns "bar"
+     * storage.clear();
+     * storage.load(); // returns null
      * ```
      */
-    Session.prototype.remove = function () {
+    Session.prototype.clear = function () {
         sessionStorage.removeItem(this.key);
-    };
-    /**
-     * Check if data exists in sessionStorage with the specified key.
-     * @param key The key of the data whose existence is checked.
-     * @returns `true` if the data exists, `false` if not.
-     * @example
-     *
-     * ```
-     * import sb from "store-buddy";
-     *
-     * sb.Session.exists("foo"); // returns false
-     * new sb.Session("foo", "bar");
-     * sb.Session.exists("foo"); // returns true
-     * ```
-     */
-    Session.exists = function (key) {
-        return Boolean(sessionStorage.getItem(key));
     };
     return Session;
 }(StoreBuddy));
-exports.Session = Session;
-exports.default = {
-    Persistent: Persistent,
-    Session: Session
-};
+/**
+ * Create persistent or temporary client-side storage with a portable,
+ * type-safe wrapper around the [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API).
+ * @param key The key used to access the stored value.
+ * @param value The value being stored.
+ * @param [session] Save data in sessionStorage (`true`) or in localStorage
+ * (`false`). Default is `false`.
+ */
+function storeBuddy(key, value, session) {
+    if (session === void 0) { session = false; }
+    if (session) {
+        return new Session(key, value);
+    }
+    else {
+        return new Persistent(key, value);
+    }
+}
+exports.default = storeBuddy;

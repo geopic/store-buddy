@@ -9,35 +9,23 @@ abstract class StoreBuddy<T> {
     this.value = value;
   }
 
-  get(): IsEmptyObject<T> {
+  load(): IsEmptyObject<T> {
     return this.value;
   }
 
-  set(data: IsEmptyObject<T>): void {
+  save(data: IsEmptyObject<T>): void {
     data;
   }
 
-  remove(): void {}
-
-  static exists(key: string): boolean {
-    key;
-    return false;
-  }
+  clear(): void {}
 }
 
-export class Persistent<T> extends StoreBuddy<T> {
+class Persistent<T> extends StoreBuddy<T> {
   /**
    * Create persistent storage. This class is a wrapper around the
    * [localStorage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
    * @param key The key used to access the stored value.
    * @param value The value being stored.
-   * @example
-   *
-   * ```
-   * import sb from "store-buddy";
-   *
-   * const storage = new sb.Persistent("foo", "bar");
-   * ```
    */
   constructor(key: string, value: IsEmptyObject<T>) {
     super(key, value);
@@ -51,16 +39,16 @@ export class Persistent<T> extends StoreBuddy<T> {
    * @example
    *
    * ```
-   * import sb from "store-buddy";
+   * import storeBuddy from "store-buddy";
    *
-   * const storage1 = new sb.Persistent("foo1", "bar");
-   * storage1.get(); // returns "bar", return type is string
+   * const storage1 = storeBuddy("foo1", "bar");
+   * storage1.load(); // returns "bar", return type is string
    *
-   * const storage2 = new sb.Persistent("foo2", 123);
-   * storage2.get(); // returns 123, return type is number
+   * const storage2 = storeBuddy("foo2", 123);
+   * storage2.load(); // returns 123, return type is number
    * ```
    */
-  get(): IsEmptyObject<T> {
+  load(): IsEmptyObject<T> {
     return JSON.parse(localStorage.getItem(this.key) as string);
   }
 
@@ -71,14 +59,14 @@ export class Persistent<T> extends StoreBuddy<T> {
    * @example
    *
    * ```
-   * import sb from "store-buddy";
+   * import storeBuddy from "store-buddy";
    *
-   * const storage1 = new sb.Persistent("foo1", "bar"); // note how data type is string
-   * storage1.set("baz"); // data is overwritten with another string with no issue
-   * storage1.set(123); // this produces an error, since a number is not expected
+   * const storage1 = storeBuddy("foo1", "bar"); // note how data type is string
+   * storage1.save("baz"); // data is overwritten with another string with no issue
+   * storage1.save(123); // this produces an error, since a number is not expected
    * ```
    */
-  set(data: IsEmptyObject<T>): void {
+  save(data: IsEmptyObject<T>): void {
     localStorage.setItem(this.key, JSON.stringify(data));
   }
 
@@ -87,50 +75,25 @@ export class Persistent<T> extends StoreBuddy<T> {
    * @example
    *
    * ```
-   * import sb from "store-buddy";
+   * import storeBuddy from "store-buddy";
    *
-   * const storage = new sb.Persistent("foo", "bar");
-   * storage.get(); // returns "bar"
-   * storage.remove();
-   * storage.get(); // returns null
+   * const storage = storeBuddy("foo", "bar");
+   * storage.load(); // returns "bar"
+   * storage.clear();
+   * storage.load(); // returns null
    * ```
    */
-  remove(): void {
+  clear(): void {
     localStorage.removeItem(this.key);
-  }
-
-  /**
-   * Check if data exists in localStorage with the specified key.
-   * @param key The key of the data whose existence is checked.
-   * @returns `true` if the data exists, `false` if not.
-   * @example
-   *
-   * ```
-   * import sb from "store-buddy";
-   *
-   * sb.Persistent.exists("foo"); // returns false
-   * new sb.Persistent("foo", "bar");
-   * sb.Persistent.exists("foo"); // returns true
-   * ```
-   */
-  static exists(key: string) {
-    return Boolean(localStorage.getItem(key));
   }
 }
 
-export class Session<T> extends StoreBuddy<T> {
+class Session<T> extends StoreBuddy<T> {
   /**
    * Create temporary storage, limited to a single user session. This class is
    * a wrapper around the [sessionStorage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage).
    * @param key The key used to access the stored value.
    * @param value The value being stored.
-   * @example
-   *
-   * ```
-   * import sb from "store-buddy";
-   *
-   * const storage = new sb.Session("foo", "bar");
-   * ```
    */
   constructor(key: string, value: IsEmptyObject<T>) {
     super(key, value);
@@ -144,16 +107,16 @@ export class Session<T> extends StoreBuddy<T> {
    * @example
    *
    * ```
-   * import sb from "store-buddy";
+   * import storeBuddy from "store-buddy";
    *
-   * const storage1 = new sb.Session("foo1", "bar");
-   * storage1.get(); // returns "bar", return type is string
+   * const storage1 = storeBuddy("foo1", "bar", true);
+   * storage1.load(); // returns "bar", return type is string
    *
-   * const storage2 = new sb.Session("foo2", 123);
-   * storage2.get(); // returns 123, return type is number
+   * const storage2 = storeBuddy("foo2", 123, true);
+   * storage2.load(); // returns 123, return type is number
    * ```
    */
-  get(): IsEmptyObject<T> {
+  load(): IsEmptyObject<T> {
     return JSON.parse(sessionStorage.getItem(this.key) as string);
   }
 
@@ -164,14 +127,14 @@ export class Session<T> extends StoreBuddy<T> {
    * @example
    *
    * ```
-   * import sb from "store-buddy";
+   * import storeBuddy from "store-buddy";
    *
-   * const storage1 = new sb.Session("foo1", "bar"); // note how data type is string
-   * storage1.set("baz"); // data is overwritten with another string with no issue
-   * storage1.set(123); // this produces an error, since a number is not expected
+   * const storage1 = storeBuddy("foo1", "bar", true); // note how data type is string
+   * storage1.save("baz"); // data is overwritten with another string with no issue
+   * storage1.save(123); // this produces an error, since a number is not expected
    * ```
    */
-  set(data: IsEmptyObject<T>): void {
+  save(data: IsEmptyObject<T>): void {
     sessionStorage.setItem(this.key, JSON.stringify(data));
   }
 
@@ -180,38 +143,35 @@ export class Session<T> extends StoreBuddy<T> {
    * @example
    *
    * ```
-   * import sb from "store-buddy";
+   * import storeBuddy from "store-buddy";
    *
-   * const storage = new sb.Session("foo", "bar");
-   * storage.get(); // returns "bar"
-   * storage.remove();
-   * storage.get(); // returns null
+   * const storage = storeBuddy("foo", "bar");
+   * storage.load(); // returns "bar"
+   * storage.clear();
+   * storage.load(); // returns null
    * ```
    */
-  remove(): void {
+  clear(): void {
     sessionStorage.removeItem(this.key);
-  }
-
-  /**
-   * Check if data exists in sessionStorage with the specified key.
-   * @param key The key of the data whose existence is checked.
-   * @returns `true` if the data exists, `false` if not.
-   * @example
-   *
-   * ```
-   * import sb from "store-buddy";
-   *
-   * sb.Session.exists("foo"); // returns false
-   * new sb.Session("foo", "bar");
-   * sb.Session.exists("foo"); // returns true
-   * ```
-   */
-  static exists(key: string) {
-    return Boolean(sessionStorage.getItem(key));
   }
 }
 
-export default {
-  Persistent,
-  Session
-};
+/**
+ * Create persistent or temporary client-side storage with a portable,
+ * type-safe wrapper around the [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API).
+ * @param key The key used to access the stored value.
+ * @param value The value being stored.
+ * @param [session] Save data in sessionStorage (`true`) or in localStorage
+ * (`false`). Default is `false`.
+ */
+export default function storeBuddy<T>(
+  key: string,
+  value: IsEmptyObject<T>,
+  session: boolean = false
+): StoreBuddy<T> {
+  if (session) {
+    return new Session(key, value);
+  } else {
+    return new Persistent(key, value);
+  }
+}
