@@ -1,10 +1,6 @@
 # store-buddy
 
-**store-buddy** is a portable, type-safe and well-documented wrapper for [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) and [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage).
-
-- Use _one_ reference to a stored item in localStorage or sessionStorage across your entire project!
-
-- Ensure that the stored item's type and/or object structure is not changed, to prevent unexpected behaviour and bugs!
+**store-buddy** is a portable, type-safe and well-documented wrapper for [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) and [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage). Use _one_ reference to a stored item in localStorage or sessionStorage across your entire project, while ensuring that the stored item's type and/or object structure is not changed, to prevent unexpected behaviour and bugs.
 
 ## Installation
 
@@ -19,11 +15,11 @@ import storeBuddy from 'store-buddy';
 
 // Initialise an entry in localStorage with the key 'site-data' and save an
 // object to that entry as its value
-const data1 = storeBuddy('site-data').save({ foo: true });
-data1.load(); // returns the object saved at the 'site-data' key: { foo: true }
+const data1 = storeBuddy('site-data').init('hello world');
+data1.load(); // returns the string saved at the 'site-data' key: "hello world"
 
-// The same as above, except with the addition of type safety :D
-const data2 = storeBuddy<string>('site-data-2').save('hello world');
+// The same as above, except with the addition of type safety
+const data2 = storeBuddy<string>('site-data-2').init('hello world');
 data2.save('hello ye olde worlde'); // overwrite old value with new value of the same type
 data2.save(123); // invalid (type of new value is not string)
 
@@ -32,8 +28,8 @@ data2.clear(); // clear all data attributed to the key "site-data-2"
 
 // The option of using sessionStorage instead of localStorage is also available
 // with a second boolean argument in the main function
-const data3 = storeBuddy('site-data', true).save(
-  'I only last as long as a single user session'
+const data3 = storeBuddy('site-data', true).init(
+  'I only last as long as a single user session!'
 );
 ```
 
