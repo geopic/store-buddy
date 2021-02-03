@@ -14,17 +14,22 @@ npm install store-buddy
 import storeBuddy from 'store-buddy';
 
 // Initialise an entry in localStorage with the key 'site-data' and save an
-// object to that entry as its value
+// string ("hello world") to that entry as its value
 const data1 = storeBuddy('site-data').init('hello world');
 data1.load(); // returns the string saved at the 'site-data' key: "hello world"
 
 // The same as above, except with the addition of type safety
 const data2 = storeBuddy<string>('site-data-2').init('hello world');
 data2.save('hello ye olde worlde'); // overwrite old value with new value of the same type
-data2.save(123); // invalid (type of new value is not string)
+data2.save(123); // this is invalid! (type of new value is not string)
 
-data1.clear(); // clear all data attributed to the key "site-data"
-data2.clear(); // clear all data attributed to the key "site-data-2"
+// Clear all data attributed to each key, for the sake of cleanliness :)
+data1.clear();
+data2.clear();
+
+// Load the first entry again, but it's been erased(!) (via clear()) so an error
+// is thrown instead (better to have the string as expected than a null value!)
+data1.load();
 
 // The option of using sessionStorage instead of localStorage is also available
 // with a second boolean argument in the main function
