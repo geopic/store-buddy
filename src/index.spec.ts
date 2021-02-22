@@ -45,13 +45,21 @@ describe('store-buddy: localStorage', () => {
     });
 
     test('save', () => {
+      const a = storeBuddy('test1').init('hello');
+      a.save('world');
+      expect(JSON.parse(localStorage.getItem('test1') as string)).toBe('world');
+
+      const b = storeBuddy<number>('test2').init(123);
+      b.save(456);
+      expect(JSON.parse(localStorage.getItem('test2') as string)).toBe(456);
+    });
+
+    test('reset', () => {
       const a = storeBuddy('test').init('hello');
       a.save('world');
-      expect(a.load()).toBe('world');
-
-      const b = storeBuddy<number>('test').init(123);
-      b.save(456);
-      expect(b.load()).toBe(456);
+      expect(JSON.parse(localStorage.getItem('test') as string)).toBe('world');
+      a.reset();
+      expect(JSON.parse(localStorage.getItem('test') as string)).toBe('hello');
     });
 
     test('clear', () => {
@@ -107,13 +115,27 @@ describe('store-buddy: sessionStorage', () => {
     });
 
     test('save', () => {
+      const a = storeBuddy('test1', true).init('hello');
+      a.save('world');
+      expect(JSON.parse(sessionStorage.getItem('test1') as string)).toBe(
+        'world'
+      );
+
+      const b = storeBuddy<number>('test2', true).init(123);
+      b.save(456);
+      expect(JSON.parse(sessionStorage.getItem('test2') as string)).toBe(456);
+    });
+
+    test('reset', () => {
       const a = storeBuddy('test', true).init('hello');
       a.save('world');
-      expect(a.load()).toBe('world');
-
-      const b = storeBuddy<number>('test', true).init(123);
-      b.save(456);
-      expect(b.load()).toBe(456);
+      expect(JSON.parse(sessionStorage.getItem('test') as string)).toBe(
+        'world'
+      );
+      a.reset();
+      expect(JSON.parse(sessionStorage.getItem('test') as string)).toBe(
+        'hello'
+      );
     });
 
     test('clear', () => {

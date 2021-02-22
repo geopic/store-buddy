@@ -34,30 +34,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function storeBuddy(key, session) {
     if (session === void 0) { session = false; }
     return {
-        init: function (data) {
+        init: function (initialData) {
             var sessionOrLocal = session ? sessionStorage : localStorage;
             if (!sessionOrLocal.getItem(key)) {
-                sessionOrLocal.setItem(key, JSON.stringify(data));
+                sessionOrLocal.setItem(key, JSON.stringify(initialData));
             }
             return {
                 load: function () {
-                    var data = session
-                        ? JSON.parse(sessionStorage.getItem(key))
-                        : JSON.parse(localStorage.getItem(key));
+                    var data = JSON.parse(sessionOrLocal.getItem(key));
                     if (!data) {
                         throw new Error('store-buddy: data has not been set or cannot be recognised');
                     }
                     return data;
                 },
                 save: function (data) {
-                    session
-                        ? sessionStorage.setItem(key, JSON.stringify(data))
-                        : localStorage.setItem(key, JSON.stringify(data));
+                    sessionOrLocal.setItem(key, JSON.stringify(data));
+                },
+                reset: function () {
+                    sessionOrLocal.setItem(key, JSON.stringify(initialData));
                 },
                 clear: function () {
-                    session
-                        ? sessionStorage.removeItem(key)
-                        : localStorage.removeItem(key);
+                    sessionOrLocal.removeItem(key);
                 }
             };
         }

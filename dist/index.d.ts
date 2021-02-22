@@ -69,6 +69,20 @@ interface StoreBuddy<T> {
      */
     save(data: IsEmptyObject<T>): void;
     /**
+     * Reset the data back to its original value set with the `init` method.
+     * @example
+     *
+     * ```ts
+     * import storeBuddy from "store-buddy";
+     *
+     * const storage = storeBuddy("foo").init("bar");
+     * storage.save("hello");
+     * storage.reset();
+     * storage.load(); // returns "bar"
+     * ```
+     */
+    reset(): void;
+    /**
      * Remove all data set using this instance.
      * @example
      *

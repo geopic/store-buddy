@@ -71,6 +71,21 @@ interface StoreBuddy<T> {
   save(data: IsEmptyObject<T>): void;
 
   /**
+   * Reset the data back to its original value set with the `init` method.
+   * @example
+   *
+   * ```ts
+   * import storeBuddy from "store-buddy";
+   *
+   * const storage = storeBuddy("foo").init("bar");
+   * storage.save("hello");
+   * storage.reset();
+   * storage.load(); // returns "bar"
+   * ```
+   */
+  reset(): void;
+
+  /**
    * Remove all data set using this instance.
    * @example
    *
@@ -122,18 +137,16 @@ export default function storeBuddy<T>(
   session: boolean = false
 ): StoreBuddyInit<T> {
   return {
-    init(data: IsEmptyObject<T>): StoreBuddy<T> {
+    init(initialData: IsEmptyObject<T>): StoreBuddy<T> {
       const sessionOrLocal = session ? sessionStorage : localStorage;
 
       if (!sessionOrLocal.getItem(key)) {
-        sessionOrLocal.setItem(key, JSON.stringify(data));
+        sessionOrLocal.setItem(key, JSON.stringify(initialData));
       }
 
       return {
         load() {
-          const data = session
-            ? JSON.parse(sessionStorage.getItem(key) as string)
-            : JSON.parse(localStorage.getItem(key) as string);
+          const data = JSON.parse(sessionOrLocal.getItem(key) as string);
 
           if (!data) {
             throw new Error(
@@ -144,14 +157,13 @@ export default function storeBuddy<T>(
           return data;
         },
         save(data: IsEmptyObject<T>) {
-          session
-            ? sessionStorage.setItem(key, JSON.stringify(data))
-            : localStorage.setItem(key, JSON.stringify(data));
+          sessionOrLocal.setItem(key, JSON.stringify(data));
+        },
+        reset() {
+          sessionOrLocal.setItem(key, JSON.stringify(initialData));
         },
         clear() {
-          session
-            ? sessionStorage.removeItem(key)
-            : localStorage.removeItem(key);
+          sessionOrLocal.removeItem(key);
         }
       };
     }
