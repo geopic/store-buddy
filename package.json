@@ -1,6 +1,6 @@
 {
   "name": "store-buddy",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "A localStorage and sessionStorage wrapper, adding type hinting and type safety.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

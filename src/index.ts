@@ -102,8 +102,9 @@ interface StoreBuddy<T> {
 }
 
 /**
- * Create persistent or temporary client-side storage with a portable,
+ * Create (or access) persistent or temporary client-side storage with a portable,
  * type-safe wrapper around the [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API).
+ * If data already exists at the specified key then it is *not* overwritten.
  * @param key The key used to access the stored value.
  * @param [session] Save data in sessionStorage (`true`) or in localStorage
  * (`false`). Default is `false`.
